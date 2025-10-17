@@ -44,7 +44,7 @@ jobs:
           echo VERSION=$VERSION
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
           # This uses the Docker `latest` tag convention.
-          [ "$BUILD_TOOLS_VERSION" == "$BUILD_TOOLS_VERSION_LATEST"] \
-            && ["$PLATFORM_VERSION" == "$PLATFORM_VERSION_LATEST" ] \
+          [ "$BUILD_TOOLS_VERSION" = "$BUILD_TOOLS_VERSION_LATEST" ] \
+            && [ "$PLATFORM_VERSION" = "$PLATFORM_VERSION_LATEST" ] \
             && docker tag $IMAGE_NAME $IMAGE_ID:latest
-          docker push --all-tags $IMAGE_ID:$VERSION
+          docker push --all-tags $IMAGE_ID
