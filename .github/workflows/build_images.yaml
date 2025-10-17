@@ -18,16 +18,17 @@ jobs:
       packages: write
       attestations: write
       id-token: write
-#    strategy:
-#      matrix:
-#        go-version: [ '1.19', '1.20', '1.21.x' ]
-    env:
-      BUILD_TOOLS_VERSION: "36.1.0"
-      PLATFORM_VERSION: "36"
+    strategy:
+      matrix:
+        build_tools_version: [ '36.0.0', '36.1.0' ]
+        platform_version: [ '35', '36' ]
     steps:
       - uses: actions/checkout@v5
 
       - name: Build image
+        env:
+          BUILD_TOOLS_VERSION: ${{ matrix.build_tools_version }}
+          PLATFORM_VERSION: ${{ matrix.platform_version }}
         run: |
           docker build . --file Dockerfile \
             --build-arg BUILD_TOOLS_VERSION=$BUILD_TOOLS_VERSION \
@@ -38,6 +39,9 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Push image
+        env:
+          BUILD_TOOLS_VERSION: ${{ matrix.build_tools_version }}
+          PLATFORM_VERSION: ${{ matrix.platform_version }}
         run: |
           IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
 
